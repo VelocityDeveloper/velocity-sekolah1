@@ -227,7 +227,7 @@ if (!function_exists('justg_header_open')) {
 	function justg_header_open()
 	{
 		echo '<header id="wrapper-header">';
-		echo '<div id="wrapper-navbar" class="px-2 px-md-0" itemscope itemtype="http://schema.org/WebSite">';
+		echo '<div id="wrapper-navbar" class="px-2" itemscope itemtype="http://schema.org/WebSite">';
 	}
 }
 if (!function_exists('justg_header_close')) {
