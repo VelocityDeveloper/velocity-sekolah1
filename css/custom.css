@@ -1,9 +1,7 @@
-[data-bs-theme=light] body {
+[data-bs-theme=light] body, body {
     font-family: 'Inter', sans-serif !important;
     font-size: 14px !important;
     background-color: #343434;
-}
-body {
 	background-image: url("../img/bg.jpg");
 	background-attachment: fixed;
 	background-repeat: no-repeat;
@@ -51,6 +49,7 @@ body {
 .widget-area .wp-block-table table>:not(caption)>*>*, 
 .widget-area table:not(.table)>:not(caption)>*>* {
     padding: 0.25rem 0.25rem;
+	color: #d6d6d6;
 }
 .widget-area h3.widget-title {
 	color: #fff;
@@ -82,7 +81,7 @@ body {
 }
 .widget-area .widget {
 	margin-bottom: 1rem;
-	color: #8f8f8f;
+	color: #d6d6d6;
 	position: relative;
 	overflow: hidden;
 	background-color: var(--bs-dark);
@@ -105,7 +104,7 @@ body {
     padding-left: 0 !important;
 }
 .widget-area .widget > ul {
-    padding-left: .35rem !important;
+    padding-left: 0 !important;
 }
 .widget ul > li,
 .entry-content ul > li {
@@ -134,9 +133,13 @@ body {
 .widget ul li {
 	display: block;
 	padding-bottom: 7px;
+    padding-left: 20px;
 	position: relative;
 	border-bottom: 1px solid #484848 !important;
 	margin-bottom: 7px;
+}
+.widget ul > li:before {
+    background: #fff !important;
 }
 .widget ul li:first-child {
 	margin-top: 7px;
@@ -146,19 +149,19 @@ body {
 	margin-bottom: 0;
 }
 .entry-content ul > li {
-    padding-left: .75rem;
+    padding-left: 20px;
 }
 .entry-content ul {
-    padding-left: 1rem !important;
+    padding-left: 0 !important;
 }
+.widget ul > li:before,
 .entry-content ul > li:before {
     content: '';
     background: rgb(8,60,119);
     background: linear-gradient(355deg, rgba(8,60,119,1) 0%, rgba(95,172,255,1) 100%);
-    width: 0.45rem;
-    height: 0.45rem;
+    width: 20px;
+    height: 20px;
     border-radius: 100%;
-    margin-top: 0.25rem;
 }
 .widget_calendar caption {
 	caption-side: top;
@@ -293,6 +296,28 @@ a:hover {
 }
 .wpcf7 {
 	max-width: 1200px !important;
+}
+.vd-gallery-item {
+	overflow: hidden;
+}
+.vd-gallery-title {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 0.6rem 0.75rem;
+	background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+	color: #ffffff;
+	font-size: 0.8rem;
+	line-height: 1.2;
+	opacity: 0;
+	transform: translateY(10px);
+	transition: opacity 0.2s ease, transform 0.4s ease;
+}
+.vd-gallery-item:focus .vd-gallery-title,
+.vd-gallery-item:hover .vd-gallery-title {
+	opacity: 1;
+	transform: translateY(0);
 }
 
 

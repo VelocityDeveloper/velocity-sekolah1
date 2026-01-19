@@ -230,9 +230,7 @@ function velocitychild_customize_register($wp_customize)
 
 ///remove breadcrumbs
 add_action('wp_head', function () {
-	if (!is_single()) {
-		remove_action('justg_before_title', 'justg_breadcrumb');
-	}
+	remove_action('justg_before_title', 'justg_breadcrumb');
 });
 
 if (!function_exists('justg_header_open')) {
@@ -379,6 +377,72 @@ function velocity_category_name($option_name){
 	return $html;
 }
 
+function velocitychild_get_post_image_url($post_id)
+{
+	if (!$post_id) {
+		return '';
+	}
+
+	$url = get_the_post_thumbnail_url($post_id, 'full');
+	if (!$url) {
+		$attachments = get_posts(
+			array(
+				'post_type'      => 'attachment',
+				'posts_per_page' => 1,
+				'post_parent'    => $post_id,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			)
+		);
+		if (!empty($attachments[0]->ID)) {
+			$url = wp_get_attachment_url($attachments[0]->ID, 'full');
+		}
+	}
+
+	return $url ? esc_url($url) : '';
+}
+
+function velocitychild_render_ratio_image($post_id, $ratio_class, $linked = true)
+{
+	$ratio_class = $ratio_class ? $ratio_class : 'ratio-16x9';
+	$image_url = velocitychild_get_post_image_url($post_id);
+	if (!$image_url) {
+		$image_url = esc_url(get_stylesheet_directory_uri() . '/img/no-image.webp');
+	}
+
+	$media = '<div class="ratio ' . esc_attr($ratio_class) . '">';
+	if ($image_url) {
+		$media .= '<img src="' . $image_url . '" class="w-100 h-100 object-fit-cover" alt="">';
+	} else {
+		$media .= '<div class="w-100 h-100 bg-light"></div>';
+	}
+	$media .= '</div>';
+
+	if ($linked && $post_id) {
+		$media = '<a class="d-block" href="' . get_the_permalink($post_id) . '" title="' . esc_attr(get_the_title($post_id)) . '">' . $media . '</a>';
+	}
+
+	return $media;
+}
+
+function velocitychild_render_ratio_image_with_title($post_id, $ratio_class)
+{
+	$ratio_class = $ratio_class ? $ratio_class : 'ratio-1x1';
+	$image_url = velocitychild_get_post_image_url($post_id);
+	if (!$image_url) {
+		$image_url = esc_url(get_stylesheet_directory_uri() . '/img/no-image.webp');
+	}
+	$title = $post_id ? get_the_title($post_id) : '';
+
+	$html  = '<a class="vd-gallery-item d-block position-relative" href="' . esc_url(get_the_permalink($post_id)) . '" title="' . esc_attr($title) . '">';
+	$html .= '<div class="ratio ' . esc_attr($ratio_class) . '">';
+	$html .= '<img src="' . $image_url . '" class="w-100 h-100 object-fit-cover" alt="' . esc_attr($title) . '">';
+	$html .= '</div>';
+	$html .= '<span class="vd-gallery-title">' . esc_html($title) . '</span>';
+	$html .= '</a>';
+
+	return $html;
+}
 
 // get first post
 function velocity_first_post($option_name){
@@ -390,7 +454,7 @@ function velocity_first_post($option_name){
 	//$html .= '<pre>'.print_r($args,1).'</pre>';
 	foreach($posts as $post) {
 		$html .= '<div class="mb-2">';
-			$html .= do_shortcode('[resize-thumbnail width="400" height="250" linked="true" post_id="'.$post->ID.'"]');
+			$html .= velocitychild_render_ratio_image($post->ID, 'ratio-16x9', true);
 		$html .= '</div>';
 		$html .= '<a class="text-dark fw-bold d-block fs-6 mb-1" href="'.get_the_permalink($post->ID).'">'.$post->post_title.'</a>';
 		$html .= '<small class="text-muted d-block mb-1">'.get_the_date('',$post->ID).'</small>';
@@ -414,7 +478,7 @@ function velocity_recent_posts($option_name, array $args = null){
 	foreach($posts as $post) {
 		$html .= '<div class="row mx-0 mb-2 pb-2 border-bottom">';
 			$html .= '<div class="col-3 px-0">';
-				$html .= do_shortcode('[resize-thumbnail width="150" height="150" linked="true" post_id="'.$post->ID.'"]');
+				$html .= velocitychild_render_ratio_image($post->ID, 'ratio-1x1', true);
 			$html .= '</div>';
 			$html .= '<div class="col-9 pe-0">';
 				$html .= '<div class="mb-1">';
@@ -442,7 +506,7 @@ function velocity_gallery_posts($option_name, array $args = null){
 	$html .= '<div class="row m-0">';
 		foreach($posts as $post) {
 			$html .= '<div class="col-md-3 col-6 p-0">';
-				$html .= do_shortcode('[resize-thumbnail width="250" height="250" linked="true" post_id="'.$post->ID.'"]');
+				$html .= velocitychild_render_ratio_image_with_title($post->ID, 'ratio-1x1');
 			$html .= '</div>';
 		}
 	$html .= '</div>';

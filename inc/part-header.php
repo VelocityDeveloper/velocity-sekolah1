@@ -10,7 +10,7 @@ $s = isset($_GET['s'])?esc_html($_GET['s']):'';
         </h2>
 
         <div class="row align-items-center m-0 pt-2">
-            <div class="col-3 col-md-8 col-lg-9 px-md-0">
+            <div class="col-2 col-md-8 col-lg-9 px-md-0">
 
                 <div class="offcanvas offcanvas-start" tabindex="-1" id="navbarNavOffcanvas">
 
@@ -36,12 +36,14 @@ $s = isset($_GET['s'])?esc_html($_GET['s']):'';
                 </div><!-- .offcanvas -->
 
                 <div class="menu-header d-md-none position-relative text-start" data-bs-theme="dark">
-                    <button class="navbar-toggler bg-dark text-white w-100 text-start" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNavOffcanvas" aria-controls="navbarNavOffcanvas" aria-expanded="false" aria-label="<?php esc_attr_e('Toggle navigation', 'justg'); ?>">
-                        <span class="navbar-toggler-icon"></span> Menu
+                    <button class="navbar-toggler w-100 text-start px-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNavOffcanvas" aria-controls="navbarNavOffcanvas" aria-expanded="false" aria-label="<?php esc_attr_e('Toggle navigation', 'justg'); ?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
                     </button>
                 </div>
             </div>
-            <div class="col-9 col-md-4 col-lg-3 ps-0">
+            <div class="col-10 col-md-4 col-lg-3 ps-0">
                 <form class="border bg-white rounded" method="get" name="searchform" action="<?php echo get_home_url(); ?>">
                     <div class="row">
                         <div class="col-9 col-md-10 pe-0">
@@ -106,9 +108,7 @@ $s = isset($_GET['s'])?esc_html($_GET['s']):'';
 
 <?php if (!is_front_page()) {
     echo '<div class="container shadow text-center py-4 bg-white border-bottom">';
-    if(function_exists('aioseo_breadcrumbs')){
-        aioseo_breadcrumbs();
-    } else {
+    if(function_exists('justg_breadcrumb')){
         echo justg_breadcrumb();
     }
     echo '</div>';
