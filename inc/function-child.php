@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 }
 
 add_action('after_setup_theme', 'velocitychild_theme_setup', 9);
+add_action('customize_register', 'velocitychild_customize_register', 20);
 
 function velocitychild_theme_setup()
 {
@@ -15,204 +16,215 @@ function velocitychild_theme_setup()
 	// Load justg_child_enqueue_parent_style after theme setup
 	add_action('wp_enqueue_scripts', 'justg_child_enqueue_parent_style', 20);
 
-	if (class_exists('Kirki')) :
-
-		$args = array(
-			'orderby' => 'name',
-			'hide_empty' => false,
-		);
-		$cats = array(
-			'' => 'Show All'
-		);
-		$categories = get_categories($args);
-		foreach ($categories as $category) {
-			$kategori[$category->term_id] = $category->name;
-		}
-
-		Kirki::add_panel('panel_velocity', [
-			'priority'    => 10,
-			'title'       => esc_html__('Velocity Theme', 'justg'),
-			'description' => esc_html__('', 'justg'),
-		]);
-
-		// section title_tagline
-		Kirki::add_section('title_tagline', [
-			'panel'    => 'panel_velocity',
-			'title'    => __('Site Identity', 'justg'),
-			'priority' => 10,
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'text',
-			'settings'    => 'running_text',
-			'label'       => __('Running Text', 'kirki'),
-			'section'     => 'title_tagline',
-		]);
-
-		// Section Social Media
-		Kirki::add_section('panel_social_media', [
-			'panel'    => 'panel_velocity',
-			'title'    => __('Social Media', 'justg'),
-			'priority' => 11,
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'url',
-			'settings'    => 'facebook_url',
-			'label'       => __('Facebook', 'kirki'),
-			'section'     => 'panel_social_media',
-			'description' => esc_html__('Facebook URL', 'kirki'),
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'url',
-			'settings'    => 'x_url',
-			'label'       => __('X / Twitter', 'kirki'),
-			'section'     => 'panel_social_media',
-			'description' => esc_html__('X / Twitter URL', 'kirki'),
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'url',
-			'settings'    => 'instagram_url',
-			'label'       => __('Instagram', 'kirki'),
-			'section'     => 'panel_social_media',
-			'description' => esc_html__('Instagram URL', 'kirki'),
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'url',
-			'settings'    => 'youtube_url',
-			'label'       => __('Youtube', 'kirki'),
-			'section'     => 'panel_social_media',
-			'description' => esc_html__('Youtube URL', 'kirki'),
-		]);
-
-
-		///Section Color
-		Kirki::add_section('section_colorvelocity', [
-			'panel'    => 'panel_velocity',
-			'title'    => __('Color & Background', 'justg'),
-			'priority' => 10,
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'color',
-			'settings'    => 'color_theme',
-			'label'       => __('Theme Color', 'kirki'),
-			'description' => esc_html__('', 'kirki'),
-			'section'     => 'section_colorvelocity',
-			'default'     => '#176cb7',
-			'transport'   => 'auto',
-			'output'      => [
-				[
-					'element'   => ':root',
-					'property'  => '--color-theme',
-				],
-				[
-					'element'   => ':root',
-					'property'  => '--bs-primary',
-				],
-				[
-					'element'   => '.border-color-theme',
-					'property'  => '--bs-border-color',
-				]
-			],
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'background',
-			'settings'    => 'background_themewebsite',
-			'label'       => __('Website Background', 'kirki'),
-			'description' => esc_html__('', 'kirki'),
-			'section'     => 'section_colorvelocity',
-			'default'     => [
-				'background-color'      => '#F5F5F5',
-				'background-image'      => '',
-				'background-repeat'     => 'repeat',
-				'background-position'   => 'center center',
-				'background-size'       => 'cover',
-				'background-attachment' => 'scroll',
-			],
-			'transport'   => 'auto',
-			'output'      => [
-				[
-					'element'   => ':root[data-bs-theme=light] body',
-				],
-				[
-					'element'   => 'body',
-				],
-			],
-		]);
-
-
-		// section Home Banner
-		Kirki::add_section('section_homebanner', [
-			'panel'    => 'panel_velocity',
-			'title'    => __('Home Banner', 'justg'),
-			'priority' => 12,
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'image',
-			'settings'    => 'home_banner',
-			'label'       => __('Banner Image', 'kirki'),
-			'section'     => 'section_homebanner',
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'text',
-			'settings'    => 'home_banner_title',
-			'label'       => __('Tittle', 'kirki'),
-			'section'     => 'section_homebanner',
-		]);
-		Kirki::add_field('justg_config', [
-			'type'        => 'text',
-			'settings'    => 'home_banner_subtitle',
-			'label'       => __('Sub Tittle', 'kirki'),
-			'section'     => 'section_homebanner',
-		]);
-        Kirki::add_field('justg_config', [
-            'type'  => 'select',
-            'settings'  => 'headline_post',
-            'label'     => esc_html__('Headline Post', 'kirki'),
-            'section'   => 'section_homebanner',
-            'default'   => '',
-            'placeholder' => esc_html__('Select Category', 'kirki'),
-            'priority'  => 10,
-            'multiple'  => 1,
-            'choices'   => $kategori,
-        ]);
-
-
-		
-		// section Home Banner
-		Kirki::add_section('section_homenews', [
-			'panel'    => 'panel_velocity',
-			'title'    => __('Home News', 'justg'),
-			'priority' => 12,
-		]);
-		for ($x = 1; $x <= 6; $x++) {
-			Kirki::add_field('justg_config', [
-				'type'  => 'select',
-				'settings'  => 'news'.$x,
-				'label'     => esc_html__('News '.$x, 'kirki'),
-				'section'   => 'section_homenews',
-				'default'   => '',
-				'placeholder' => esc_html__('Select Category', 'kirki'),
-				'priority'  => 10,
-				'multiple'  => 1,
-				'choices'   => $kategori,
-			]);
-		}
-
-		// remove panel in customizer 
-		Kirki::remove_panel('global_panel');
-		Kirki::remove_panel('panel_header');
-		Kirki::remove_panel('panel_footer');
-		Kirki::remove_panel('panel_antispam');
-		Kirki::remove_control('display_header_text');
-		Kirki::remove_section('header_image');
-
-	endif;
-
 	//remove action from Parent Theme
 	remove_action('justg_header', 'justg_header_menu');
 	remove_action('justg_do_footer', 'justg_the_footer_open');
 	remove_action('justg_do_footer', 'justg_the_footer_content');
 	remove_action('justg_do_footer', 'justg_the_footer_close');
 	remove_theme_support('widgets-block-editor');
+}
+
+function velocitychild_get_category_choices()
+{
+	$choices = array(
+		0 => esc_html__('Show All', 'justg'),
+	);
+
+	$categories = get_categories(
+		array(
+			'orderby'    => 'name',
+			'hide_empty' => false,
+		)
+	);
+
+	foreach ($categories as $category) {
+		$choices[$category->term_id] = $category->name;
+	}
+
+	return $choices;
+}
+
+function velocitychild_customize_register($wp_customize)
+{
+	$wp_customize->add_panel(
+		'panel_velocity',
+		array(
+			'priority'    => 10,
+			'title'       => esc_html__('Velocity Theme', 'justg'),
+			'description' => esc_html__('', 'justg'),
+		)
+	);
+
+	$title_section = $wp_customize->get_section('title_tagline');
+	if ($title_section) {
+		$title_section->panel    = 'panel_velocity';
+		$title_section->title    = esc_html__('Site Identity', 'justg');
+		$title_section->priority = 10;
+	} else {
+		$wp_customize->add_section(
+			'title_tagline',
+			array(
+				'panel'    => 'panel_velocity',
+				'title'    => esc_html__('Site Identity', 'justg'),
+				'priority' => 10,
+			)
+		);
+	}
+
+	$wp_customize->add_setting(
+		'running_text',
+		array(
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'running_text',
+		array(
+			'type'    => 'text',
+			'label'   => esc_html__('Running Text', 'justg'),
+			'section' => 'title_tagline',
+		)
+	);
+
+	$wp_customize->add_section(
+		'panel_social_media',
+		array(
+			'panel'    => 'panel_velocity',
+			'title'    => esc_html__('Social Media', 'justg'),
+			'priority' => 11,
+		)
+	);
+
+	$social_fields = array(
+		'facebook_url'  => esc_html__('Facebook', 'justg'),
+		'x_url'         => esc_html__('X / Twitter', 'justg'),
+		'instagram_url' => esc_html__('Instagram', 'justg'),
+		'youtube_url'   => esc_html__('Youtube', 'justg'),
+	);
+	foreach ($social_fields as $setting_id => $label) {
+		$wp_customize->add_setting(
+			$setting_id,
+			array(
+				'sanitize_callback' => 'esc_url_raw',
+			)
+		);
+		$wp_customize->add_control(
+			$setting_id,
+			array(
+				'type'        => 'url',
+				'label'       => $label,
+				'section'     => 'panel_social_media',
+				'description' => sprintf(esc_html__('%s URL', 'justg'), $label),
+			)
+		);
+	}
+
+	$wp_customize->add_section(
+		'section_homebanner',
+		array(
+			'panel'    => 'panel_velocity',
+			'title'    => esc_html__('Home Banner', 'justg'),
+			'priority' => 12,
+		)
+	);
+	$wp_customize->add_setting(
+		'home_banner',
+		array(
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		new WP_Customize_Image_Control(
+			$wp_customize,
+			'home_banner',
+			array(
+				'label'   => esc_html__('Banner Image', 'justg'),
+				'section' => 'section_homebanner',
+			)
+		)
+	);
+	$wp_customize->add_setting(
+		'home_banner_title',
+		array(
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'home_banner_title',
+		array(
+			'type'    => 'text',
+			'label'   => esc_html__('Title', 'justg'),
+			'section' => 'section_homebanner',
+		)
+	);
+	$wp_customize->add_setting(
+		'home_banner_subtitle',
+		array(
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'home_banner_subtitle',
+		array(
+			'type'    => 'text',
+			'label'   => esc_html__('Subtitle', 'justg'),
+			'section' => 'section_homebanner',
+		)
+	);
+
+	$category_choices = velocitychild_get_category_choices();
+
+	$wp_customize->add_setting(
+		'headline_post',
+		array(
+			'default'           => 0,
+			'sanitize_callback' => 'absint',
+		)
+	);
+	$wp_customize->add_control(
+		'headline_post',
+		array(
+			'type'    => 'select',
+			'label'   => esc_html__('Headline Post', 'justg'),
+			'section' => 'section_homebanner',
+			'choices' => $category_choices,
+		)
+	);
+
+	$wp_customize->add_section(
+		'section_homenews',
+		array(
+			'panel'    => 'panel_velocity',
+			'title'    => esc_html__('Home News', 'justg'),
+			'priority' => 12,
+		)
+	);
+	for ($x = 1; $x <= 6; $x++) {
+		$setting_id = 'news' . $x;
+		$wp_customize->add_setting(
+			$setting_id,
+			array(
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+			)
+		);
+		$wp_customize->add_control(
+			$setting_id,
+			array(
+				'type'    => 'select',
+				'label'   => esc_html__('News ' . $x, 'justg'),
+				'section' => 'section_homenews',
+				'choices' => $category_choices,
+			)
+		);
+	}
+
+	$wp_customize->remove_panel('global_panel');
+	$wp_customize->remove_panel('panel_header');
+	$wp_customize->remove_panel('panel_footer');
+	$wp_customize->remove_panel('panel_antispam');
+	$wp_customize->remove_control('display_header_text');
+	$wp_customize->remove_section('header_image');
 }
 
 
